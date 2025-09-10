@@ -1,0 +1,38 @@
+app:
+  project_name: "Supply Chain Orchestrator"
+  output_dir: "outputs"
+
+
+# Optional: enable if you have a warehouse DB
+sql:
+  enabled: false
+  connection_string: "postgresql+psycopg2://user:pass@host:5432/supplychain"
+  default_schema: public
+
+
+retrieval:
+  doc_root: "data" # folder for CSV/text docs
+  fast_moving_threshold: 0.8 # percentile of demand velocity
+  top_k: 100 # default max rows per retrieval
+
+
+optimization:
+  scenario_name: "base"
+  service_level: 0.95
+  warehouse_capacity: 1_000_000 # volume units
+  ordering_cost_per_order: 100.0
+  holding_cost_per_unit: 0.02 # per period
+  stockout_penalty_per_unit: 5.0
+  min_order_qty_by_sku: {} # override per SKU if needed
+  max_order_qty_by_sku: {}
+
+business_rules:
+
+  priority_skus: ["SKU-001", "SKU-002"]
+  priority_weight: 1.2 # emphasize holding service for priority SKUs
+  supplier_lead_time_days: # default/fallback by supplier
+  SUP-A: 7
+  SUP-B: 14
+  SUP-C: 21
+  visualization:
+  default_theme: "light"

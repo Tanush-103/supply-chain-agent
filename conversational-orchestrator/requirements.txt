@@ -1,0 +1,12 @@
+fastapi==0.115.0
+uvicorn==0.30.6
+pandas==2.2.2
+numpy==1.26.4
+scikit-learn==1.5.1
+pydantic==1.10.17
+PyYAML==6.0.2
+pulp==2.9.0
+plotly==5.23.0
+SQLAlchemy==2.0.32
+psycopg2-binary==2.9.9
+streamlit

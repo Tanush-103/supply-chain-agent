@@ -1,0 +1,5 @@
+sku,description,stock_on_hand,unit_volume,supplier
+SKU-001,Widget A,120,0.5,SUP-A
+SKU-002,Widget B,40,0.6,SUP-A
+SKU-003,Widget C,0,0.4,SUP-B
+SKU-004,Widget D,300,0.8,SUP-C
