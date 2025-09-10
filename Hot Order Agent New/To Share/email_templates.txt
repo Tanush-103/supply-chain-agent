@@ -1,0 +1,11 @@
+
+Subject: New Order – Acme Corp
+Body (CSV):
+product,qty,customer,priority,origin,destination
+Widget A,140,Acme Corp,Normal,ATL,CHI
+
+Expedite: Can you expedite to 1 day?
+Qty change: Change qty 120
+Destination change: Ship to Boston
+Cancel: Please cancel order 7001.
+Confirm: Confirm — proceed as planned for order 7001.

@@ -1,0 +1,7 @@
+
+order_id,product,qty,customer,priority,origin,destination,customer_email
+1001,Widget A,50,Acme Corp,High,ATL,CHI,demo.customer@example.com
+1002,Widget B,20,Globex,Normal,DFW,SFO,demo.customer@example.com
+1003,Widget C,10,Soylent,High,PHL,BOS,demo.customer@example.com
+1004,Widget A,120,Initech,Normal,DEN,LAX,demo.customer@example.com
+1005,Widget B,200,Stark Industries,High,SEA,PHX,demo.customer@example.com
