@@ -8,7 +8,7 @@ from hot_order_agent_core.promise_rate import update_orders
 st.set_page_config(page_title="Hot Order Agent", layout="wide")
 st.title("🔥 Hot Order Agent Dashboard (OpenAI-enabled)")
 
-default_orders_path = "data/sample_orders.csv"
+default_orders_path = "data\sample_orders.csv"
 orders_df = pd.read_csv(default_orders_path)
 
 with st.expander("📦 Current Orders (from data/sample_orders.csv)"):
