@@ -15,7 +15,7 @@ st.write("Data dir contents (script-relative):", list((Path(__file__).resolve().
 st.set_page_config(page_title="Hot Order Agent", layout="wide")
 st.title("🔥 Hot Order Agent Dashboard (OpenAI-enabled)")
 
-default_orders_path = "data/sample_orders.csv"
+default_orders_path = "/mount/src/supply-chain-agent/hot-order-agent/data/sample_orders.csv"
 orders_df = pd.read_csv(default_orders_path)
 
 with st.expander("📦 Current Orders (from data/sample_orders.csv)"):

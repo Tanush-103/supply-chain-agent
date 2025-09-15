@@ -1,6 +1,6 @@
 
 import pandas as pd
-INV_PATH = "data/inventory.csv"
+INV_PATH = "/mount/src/supply-chain-agent/hot-order-agent/data/inventory.csv"
 
 def check_inventory(order_row):
     product = order_row.get("product")

@@ -5,7 +5,7 @@ from .cost import calculate_expedite_cost
 from .shipment import estimate_shipment_days
 from .communication import send_customer_update
 
-ORDERS_PATH = "data/sample_orders.csv"
+ORDERS_PATH = "/mount/src/supply-chain-agent/hot-order-agent/data/sample_orders.csv"
 
 def _compute_row(row):
     status, dc, available_qty = check_inventory(row)
