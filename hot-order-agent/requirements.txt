@@ -3,4 +3,3 @@ streamlit
 pandas
 python-dotenv
 openai
-pyrfc==3.3.1
