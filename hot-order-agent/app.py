@@ -5,12 +5,12 @@ from hot_order_agent_core import hoa
 from hot_order_agent_core.llm import llm_parse_email
 from hot_order_agent_core.promise_rate import update_orders
 
-from pathlib import Path
+# from pathlib import Path
 
-st.write("CWD:", Path.cwd())
-st.write("Script dir:", Path(__file__).resolve().parent)
-st.write("Repo root contents:", list(Path.cwd().iterdir()))
-st.write("Data dir contents (script-relative):", list((Path(__file__).resolve().parent / "data").glob("*")))
+# st.write("CWD:", Path.cwd())
+# st.write("Script dir:", Path(__file__).resolve().parent)
+# st.write("Repo root contents:", list(Path.cwd().iterdir()))
+# st.write("Data dir contents (script-relative):", list((Path(__file__).resolve().parent / "data").glob("*")))
 
 st.set_page_config(page_title="Hot Order Agent", layout="wide")
 st.title("🔥 Hot Order Agent Dashboard (OpenAI-enabled)")
