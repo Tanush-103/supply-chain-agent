@@ -5,7 +5,7 @@ from email.message import EmailMessage
 from datetime import datetime
 from dotenv import load_dotenv
 
-LOG_PATH = "logs/communication.log"
+LOG_PATH = "Hot Order Agent New/logs/communication.log"
 
 def _env_bool(key, default=False):
     v = (os.getenv(key, str(default)) or str(default)).strip().lower()

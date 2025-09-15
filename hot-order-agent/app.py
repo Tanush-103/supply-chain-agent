@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 from hot_order_agent_core import hoa
 from hot_order_agent_core.llm import llm_parse_email
+from hot_order_agent_core.promise_rate import update_orders
 
 st.set_page_config(page_title="Hot Order Agent", layout="wide")
 st.title("🔥 Hot Order Agent Dashboard (OpenAI-enabled)")
@@ -25,7 +26,7 @@ if uploaded is not None:
     except Exception as e:
         st.error(f"Failed to read uploaded CSV: {e}")
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 with col1:
     if st.button("▶️ Process Orders"):
         results = hoa.process_orders(orders_df)
@@ -38,6 +39,16 @@ with col2:
         results = hoa.process_orders(orders_df)
         st.session_state["hoa_results"] = results
         st.success("Re-run complete.")
+
+with col3:
+    if st.button("▶️ Run ATP Check"):
+        orders_list = orders_df['order_id'].to_list()
+        results = hoa.process_orders(orders_df)
+        results_atp = update_orders(orders_list)
+        results_atp = results.merge(results_atp,how="left")
+        st.session_state["hoa_results"] = results_atp
+        st.success("ATP Check is done & updates sent (if SMTP configured).")
+
 
 st.markdown("---")
 st.subheader("🧠 Try NL Parsing (no email needed)")
