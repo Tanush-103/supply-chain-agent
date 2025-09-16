@@ -187,24 +187,6 @@ def fetch_order_items(order_ids):
     #print(_odata_get_all_v2(sess, url))
     return _odata_get_all_v2(sess, url)
 
-
-# def fetch_order_items(order_ids):
-#     """A_SalesOrderItem with header nav for SoldToParty; gives product id, qty, priority, plant."""
-    
-#     if not S4_SALES_BASE:
-#         raise RuntimeError("S4_SALES_BASE_URL not set")
-#     entity = f"{S4_SALES_BASE}/A_SalesOrderItem"
-#     or_terms = [f"SalesOrder eq '{oid}'" for oid in order_ids]
-#     select = ",".join([
-#         "SalesOrder","SalesOrderItem",
-#         "Material","RequestedQuantity","RequestedQuantityUnit",
-#         "DeliveryPriority","ProductionPlant"
-#     ])
-#     expand = "to_SalesOrder($select=SoldToParty,ShipToParty)"
-#     params = {"$filter": "(" + " or ".join(or_terms) + ")", "$select": select, "$expand": expand}
-#     url = f"{entity}?{urlencode(params)}"
-#     return _odata_get_all_v2(_session(), url)
-
 def fetch_destination_cities(order_ids):
     """A_SalesOrderPartnerAddress for Ship-to partner document address → CityName."""
     if not S4_SALES_BASE:
@@ -215,7 +197,6 @@ def fetch_destination_cities(order_ids):
     #params = {"$filter": "(" + " or ".join(or_terms) + ")", "$select": "SalesOrder,CityName"}
     url = f"{entity}?{urlencode(params)}"
     rows = _odata_get_all_v2(_session(), url)
-    print(rows)
     return {r["SalesOrder"]: r.get("CityName") for r in rows}
 
 def fetch_product_names(material_ids):
@@ -256,6 +237,7 @@ def fetch_product_names(material_ids):
 
 def fetch_origin_cities(plants):
     """API_Plant_2 (OData V4) → Plant.CityName. If not available, return {} and we’ll use the plant code."""
+    
     if not plants:
         return {}
     if not S4_PLANT_BASE:
@@ -263,13 +245,21 @@ def fetch_origin_cities(plants):
     s = _session()
     out = {}
     for p in sorted(set(plants)):
-        url = f"{S4_PLANT_BASE}/Plant?$filter=Plant eq '{p}'&$select=Plant,CityName"
+        
+        url = f"{S4_PLANT_BASE}/A_Plant?$filter=Plant eq '{p}'&$select=Plant,PlantName"
+        #url = f"{S4_PLANT_BASE}/A_Plant?$filter=Plant eq '{p}'"
+        #url = f"{S4_PLANT_BASE}/A_Plant"
         try:
+            
             r = s.get(url, timeout=REQUEST_TIMEOUT, verify=VERIFY); r.raise_for_status()
-            vals = r.json().get("value", [])
-            if vals:
-                out[p] = vals[0].get("CityName")
-        except Exception:
+            
+            
+           
+            json_dict = r.json()
+            out[p] = json_dict['d']['results'][0].get('PlantName')
+        except Exception as e:
+            
+
             out.setdefault(p, None)
     return out
 
@@ -283,11 +273,19 @@ def fetch_bp_emails(bp_ids):
     out = {}
     for bp in sorted(set(bp_ids)):
         url = (f"{S4_BP_BASE}/A_BusinessPartner('{bp}')"
-               f"?$select=BusinessPartner"
-               f"&$expand=to_BusinessPartnerAddress($expand=to_EmailAddress)")
+               f"?$select=BusinessPartner, to_BusinessPartnerAddress/to_EmailAddress/EmailAddress"
+               f"&$expand=to_BusinessPartnerAddress/to_EmailAddress"
+               #($expand=to_EmailAddress)"
+               )
+        #url = f"{S4_BP_BASE}/A_BusinessPartner"
+        #url = (f"{S4_BP_BASE}/A_BusinessPartner('{bp}')"
+                #)
         try:
             j = s.get(url, timeout=REQUEST_TIMEOUT, verify=VERIFY).json()
+            print(j)
             addrs = j.get("d", {}).get("to_BusinessPartnerAddress", {}).get("results", []) or []
+            #partner = j.get("d", {}).get("BusinessPartner", {}).get("results", []) or []
+            #print(partner)
             email = None
             for a in addrs:
                 emails = a.get("to_EmailAddress", {}).get("results", []) or []
@@ -299,6 +297,7 @@ def fetch_bp_emails(bp_ids):
                 if emails and not email:
                     email = emails[0].get("EmailAddress")
             out[bp] = email
+        
         except Exception:
             out[bp] = None
     return out
@@ -314,7 +313,6 @@ def get_orders_snapshot(order_ids):
     sold_tos = { (it.get("to_SalesOrder") or {}).get("SoldToParty")
                  for it in items if it.get("to_SalesOrder") }
     sold_tos.discard(None)
-
     prod_names = fetch_product_names(materials)
     origin_cities = fetch_origin_cities(plants)
     dest_cities = fetch_destination_cities(order_ids)
